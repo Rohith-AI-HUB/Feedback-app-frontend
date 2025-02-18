@@ -82,49 +82,48 @@ function App() {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     let newErrors = {
       name: validate("name", feedback.name),
       email: validate("email", feedback.email),
       message: validate("message", feedback.message)
     };
-
+  
     setErrors(newErrors);
-
+  
     if (Object.values(newErrors).some(error => error)) {
       return;
     }
-
+  
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/feedback`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json' 
+        },
         body: JSON.stringify(feedback)
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Error submitting feedback:", errorData.error);
         alert("Error submitting feedback");
         return;
       }
-
-      // ✅ Show success message
+  
       setSuccessMessage("Thank you! Your feedback has been submitted successfully.");
-
-      // Clear form fields and errors after submission
       setFeedback({ name: '', email: '', message: '' });
       setErrors({});
       fetchFeedback();
-
-      // ✅ Hide success message after 3 seconds
+  
       setTimeout(() => setSuccessMessage(""), 3000);
-
     } catch (error) {
       console.error("Error during submission:", error);
       alert("Error submitting feedback");
     }
   };
+    
+  console.log("API URL:", process.env.REACT_APP_API_URL);
 
   return (
     <div className="App">
